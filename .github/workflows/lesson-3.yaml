@@ -6,6 +6,7 @@ on:
       - lesson-3
 jobs:
   deploy:
+  needs: functional-tests
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -17,3 +18,14 @@ jobs:
         run: zip -r deploy.zip build Dockerfile
       - name: '**PLACEHOLDER** Deploy to Elastic Beanstalk'
         run: echo Placeholder for Deployment
+  functional-tests:
+    runs-on: ubuntu-latest
+    defaults:
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm install
+        working-directory: frontend
+      - name: Run functional tests
+        run: npm test -- --coverage --watchAll=false
+        working-directory: frontend
